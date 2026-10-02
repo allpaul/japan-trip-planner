@@ -19,3 +19,19 @@
   animation: gentle-tilt 3s ease-in-out infinite;
   transform-origin: bottom center;
 }
+
+@keyframes gentle-tilt-reverse {
+  0%,
+  100% {
+    transform: rotate(3deg);
+  }
+
+  50% {
+    transform: rotate(-5deg);
+  }
+}
+
+.animate-gentle-tilt-reverse {
+  animation: gentle-tilt-reverse 3s ease-in-out infinite;
+  transform-origin: bottom center;
+}

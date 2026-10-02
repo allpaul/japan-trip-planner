@@ -22,6 +22,7 @@ import MobileDayNav from './components/MobileDayNav'
 
 import japanHero from './assets/japan-hero.webp'
 import sushiB from './assets/sushi-bee.png'
+import onigiriP from './assets/onigiri-p.png'
 
 function AppContent() {
   const [selectedPlace, setSelectedPlace] =
@@ -256,12 +257,27 @@ function AppContent() {
                       </span>
                     </div>
                   </div>
-
                   <img
-                    src={sushiB}
-                    alt=""
-                    className="absolute bottom-3 right-4 h-28 w-auto origin-bottom object-contain animate-gentle-tilt"
-                  />
+  src={onigiriP}
+  alt=""
+  className="
+    absolute bottom-6 right-30
+    h-28 w-auto
+    origin-bottom object-contain
+    animate-gentle-tilt
+  "
+/>
+
+<img
+  src={sushiB}
+  alt=""
+  className="
+    absolute bottom-5 right-4
+    h-28 w-auto
+    origin-bottom object-contain
+    animate-gentle-tilt-reverse
+  "
+/>
                 </div>
               </div>
             </div>
