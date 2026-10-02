@@ -136,7 +136,97 @@ function TripMapContent({
         ),
     ).values(),
   ]
-
+  useEffect(() => {
+    if (!map || selectedPlace) {
+      return
+    }
+  
+    const locations = [
+      ...activities
+        .map(
+          ({ activity }) =>
+            resolvedPlaces[
+              activity.id
+            ]?.location,
+        )
+        .filter(
+          (
+            location,
+          ): location is {
+            lat: number
+            lng: number
+          } => Boolean(location),
+        ),
+  
+      ...accommodations
+        .map(
+          (accommodation) =>
+            resolvedPlaces[
+              accommodation.id
+            ]?.location,
+        )
+        .filter(
+          (
+            location,
+          ): location is {
+            lat: number
+            lng: number
+          } => Boolean(location),
+        ),
+    ]
+  
+    if (locations.length === 0) {
+      return
+    }
+  
+    if (locations.length === 1) {
+      map.setCenter(locations[0])
+      map.setZoom(15)
+      return
+    }
+  
+    const bounds = {
+      north: Math.max(
+        ...locations.map(
+          (location) =>
+            location.lat,
+        ),
+      ),
+  
+      south: Math.min(
+        ...locations.map(
+          (location) =>
+            location.lat,
+        ),
+      ),
+  
+      east: Math.max(
+        ...locations.map(
+          (location) =>
+            location.lng,
+        ),
+      ),
+  
+      west: Math.min(
+        ...locations.map(
+          (location) =>
+            location.lng,
+        ),
+      ),
+    }
+  
+    map.fitBounds(bounds, {
+      top: 70,
+      right: 50,
+      bottom: 70,
+      left: 50,
+    })
+  }, [
+    map,
+    days,
+    resolvedPlaces,
+    selectedPlace,
+  ])
   /*
    * Zoom to selected activity
    * or selected hotel.

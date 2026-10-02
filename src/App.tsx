@@ -1,5 +1,12 @@
-import { useState } from 'react'
-import { APIProvider } from '@vis.gl/react-google-maps'
+import {
+  useEffect,
+  useState,
+} from 'react'
+
+import {
+  APIProvider,
+} from '@vis.gl/react-google-maps'
+
 import {
   CalendarDays,
   Clock,
@@ -7,7 +14,9 @@ import {
   Map as MapIcon,
 } from 'lucide-react'
 
-import type { SelectablePlace } from './models/itinerary'
+import type {
+  SelectablePlace,
+} from './models/itinerary'
 
 import { itinerary } from './data/itinerary'
 import { dayColours } from './data/dayColours'
@@ -25,14 +34,26 @@ import sushiB from './assets/sushi-bee.png'
 import onigiriP from './assets/onigiri-p.png'
 
 function AppContent() {
-  const [selectedPlace, setSelectedPlace] =
-    useState<SelectablePlace | null>(null)
+  const [
+    selectedPlace,
+    setSelectedPlace,
+  ] =
+    useState<SelectablePlace | null>(
+      null,
+    )
 
-  const [selectedDayId, setSelectedDayId] =
-    useState(itinerary[0].id)
+  const [
+    selectedDayId,
+    setSelectedDayId,
+  ] = useState(itinerary[0].id)
 
-  const [mobileView, setMobileView] =
-    useState<'itinerary' | 'map'>('itinerary')
+  const [
+    mobileView,
+    setMobileView,
+  ] =
+    useState<
+      'itinerary' | 'map'
+    >('itinerary')
 
   const resolvedPlaces =
     useResolvedPlaces(itinerary)
@@ -43,25 +64,104 @@ function AppContent() {
       resolvedPlaces,
     )
 
+  /*
+   * Keep the mobile date navigation in
+   * sync with the day currently beneath
+   * the sticky mobile header.
+   */
+  useEffect(() => {
+      const isMobile =
+      window.matchMedia(
+        '(max-width: 767px)',
+      ).matches
+    
+    if (
+      isMobile &&
+      mobileView !== 'itinerary'
+    ) {
+      return
+    }
+
+    const updateActiveDay = () => {
+      /*
+       * MobileDayNav + Itinerary/Map
+       * controls are roughly 120px high.
+       * Check slightly beneath them.
+       */
+      const triggerPoint = 140
+
+      let activeDayId =
+        itinerary[0].id
+
+      for (const day of itinerary) {
+        const element =
+          document.getElementById(
+            day.id,
+          )
+
+        if (!element) {
+          continue
+        }
+
+        const rect =
+          element.getBoundingClientRect()
+
+        if (
+          rect.top <= triggerPoint
+        ) {
+          activeDayId = day.id
+        } else {
+          break
+        }
+      }
+
+      setSelectedDayId(
+        activeDayId,
+      )
+    }
+
+    updateActiveDay()
+
+    window.addEventListener(
+      'scroll',
+      updateActiveDay,
+      {
+        passive: true,
+      },
+    )
+
+    return () => {
+      window.removeEventListener(
+        'scroll',
+        updateActiveDay,
+      )
+    }
+  }, [mobileView])
+
   const selectedDayIndex =
     itinerary.findIndex(
-      (day) => day.id === selectedDayId,
+      (day) =>
+        day.id === selectedDayId,
     )
 
   const selectedDay =
-    itinerary[selectedDayIndex] ??
-    itinerary[0]
+    itinerary[
+      selectedDayIndex
+    ] ?? itinerary[0]
 
   const mapActivities =
     selectedDay.activities.filter(
       (activity) =>
-        resolvedPlaces[activity.id]?.location,
+        resolvedPlaces[
+          activity.id
+        ]?.location,
     )
 
   const selectedActivityIndex =
     mapActivities.findIndex(
       (activity) =>
-        activity.id === selectedPlace?.id,
+        activity.id ===
+        selectedPlace?.id,
     )
 
   const currentActivityIndex =
@@ -71,27 +171,18 @@ function AppContent() {
 
   const previousActivity =
     currentActivityIndex > 0
-      ? mapActivities[currentActivityIndex - 1]
+      ? mapActivities[
+          currentActivityIndex - 1
+        ]
       : undefined
 
   const nextActivity =
     currentActivityIndex <
-      mapActivities.length - 1
-      ? mapActivities[currentActivityIndex + 1]
+    mapActivities.length - 1
+      ? mapActivities[
+          currentActivityIndex + 1
+        ]
       : undefined
-
-  const getFirstMappedActivity = (
-    dayId: string,
-  ) => {
-    const day = itinerary.find(
-      (day) => day.id === dayId,
-    )
-
-    return day?.activities.find(
-      (activity) =>
-        resolvedPlaces[activity.id]?.location,
-    )
-  }
 
   const scrollToDay = (
     dayId: string,
@@ -112,41 +203,43 @@ function AppContent() {
     dayId: string,
   ) => {
     setSelectedDayId(dayId)
-
-    if (mobileView === 'map') {
-      const firstActivity =
-        getFirstMappedActivity(dayId)
-
-      setSelectedPlace(
-        firstActivity ?? null,
-      )
-
-      return
-    }
-
     setSelectedPlace(null)
-    scrollToDay(dayId)
+
+    if (
+      mobileView === 'itinerary'
+    ) {
+      scrollToDay(dayId)
+    }
   }
 
-  const handleMobileMapOpen = () => {
-    setMobileView('map')
+  const handleMobileMapOpen =
+    () => {
+      setMobileView('map')
 
-    const firstActivity =
-      getFirstMappedActivity(
-        selectedDayId,
-      )
+      const selectedPlaceIsOnDay =
+        selectedDay.activities.some(
+          (activity) =>
+            activity.id ===
+            selectedPlace?.id,
+        ) ||
+        selectedDay
+          .accommodation?.id ===
+          selectedPlace?.id
 
-    setSelectedPlace(
-      firstActivity ?? null,
-    )
-  }
+      if (
+        !selectedPlaceIsOnDay
+      ) {
+        setSelectedPlace(null)
+      }
+    }
 
   const handleMobileItineraryOpen =
     () => {
       setMobileView('itinerary')
-      setSelectedPlace(null)
 
-      scrollToDay(selectedDayId)
+      scrollToDay(
+        selectedDayId,
+      )
     }
 
   return (
@@ -177,12 +270,16 @@ function AppContent() {
                 handleMobileItineraryOpen
               }
               className={`
-                flex cursor-pointer items-center justify-center gap-2
-                rounded-lg py-2 text-sm font-semibold
-                ${mobileView ===
+                flex cursor-pointer
+                items-center
+                justify-center gap-2
+                rounded-lg py-2
+                text-sm font-semibold
+                ${
+                  mobileView ===
                   'itinerary'
-                  ? 'bg-base-300 text-base-content'
-                  : 'text-base-content/60'
+                    ? 'bg-base-300 text-base-content'
+                    : 'text-base-content/60'
                 }
               `}
             >
@@ -196,12 +293,16 @@ function AppContent() {
                 handleMobileMapOpen
               }
               className={`
-                flex cursor-pointer items-center justify-center gap-2
-                rounded-lg py-2 text-sm font-semibold
-                ${mobileView ===
+                flex cursor-pointer
+                items-center
+                justify-center gap-2
+                rounded-lg py-2
+                text-sm font-semibold
+                ${
+                  mobileView ===
                   'map'
-                  ? 'bg-base-300 text-base-content'
-                  : 'text-base-content/60'
+                    ? 'bg-base-300 text-base-content'
+                    : 'text-base-content/60'
                 }
               `}
             >
@@ -216,9 +317,10 @@ function AppContent() {
           <div
             className={`
               min-w-0
-              ${mobileView === 'map'
-                ? 'hidden md:block'
-                : 'block'
+              ${
+                mobileView === 'map'
+                  ? 'hidden md:block'
+                  : 'block'
               }
             `}
           >
@@ -227,20 +329,54 @@ function AppContent() {
               <img
                 src={japanHero}
                 alt="Japan"
-                className="h-72 w-full object-cover"
+                className="
+                  h-72 w-full
+                  object-cover
+                "
               />
 
-              <div className="relative z-10 mx-6 -mt-10 rounded-3xl bg-base-100 p-6 shadow-xl">
+              <div
+                className="
+                  relative z-10
+                  mx-3 -mt-10
+                  rounded-3xl
+                  bg-base-100
+                  p-4
+                  shadow-xl
+                  md:mx-6
+                  md:p-6
+                "
+              >
                 <div className="pr-28">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+                  <p
+                    className="
+                      text-sm font-semibold
+                      uppercase
+                      tracking-[0.2em]
+                      text-primary
+                    "
+                  >
                     Japan 2026
                   </p>
 
-                  <h1 className="mt-1 text-3xl font-bold tracking-tight">
+                  <h1
+                    className="
+                      mt-1 text-3xl
+                      font-bold
+                      tracking-tight
+                    "
+                  >
                     Buhbee-san in Japan
                   </h1>
 
-                  <div className="mt-4 flex flex-wrap gap-4 text-sm text-base-content/60">
+                  <div
+                    className="
+                      mt-4 flex
+                      flex-wrap gap-4
+                      text-sm
+                      text-base-content/60
+                    "
+                  >
                     <div className="flex items-center gap-2">
                       <CalendarDays className="h-4 w-4" />
 
@@ -257,33 +393,38 @@ function AppContent() {
                       </span>
                     </div>
                   </div>
-                  <img
-  src={onigiriP}
-  alt=""
-  className="
-    absolute bottom-6 right-30
-    h-28 w-auto
-    origin-bottom object-contain
-    animate-gentle-tilt
-  "
-/>
 
-<img
-  src={sushiB}
-  alt=""
-  className="
-    absolute bottom-5 right-4
-    h-28 w-auto
-    origin-bottom object-contain
-    animate-gentle-tilt-reverse
-  "
-/>
+                  <img
+                    src={onigiriP}
+                    alt=""
+                    className="
+                      absolute bottom-6
+                      right-30
+                      h-28 w-auto
+                      origin-bottom
+                      object-contain
+                      animate-gentle-tilt
+                    "
+                  />
+
+                  <img
+                    src={sushiB}
+                    alt=""
+                    className="
+                      absolute bottom-5
+                      right-4
+                      h-28 w-auto
+                      origin-bottom
+                      object-contain
+                      animate-gentle-tilt-reverse
+                    "
+                  />
                 </div>
               </div>
             </div>
 
             {/* Days */}
-            <div className="mx-auto max-w-3xl px-6 py-10">
+          <div className="mx-auto max-w-3xl px-6 py-10">
               {itinerary.map(
                 (
                   day,
@@ -292,22 +433,34 @@ function AppContent() {
                   <div
                     key={day.id}
                     id={day.id}
-                    className="scroll-mt-32"
+                    className="
+                      scroll-mt-32
+                    "
                   >
                     <DayCard
                       day={day}
                       color={
                         dayColours[
-                        dayIndex %
-                        dayColours.length
+                          dayIndex %
+                            dayColours.length
                         ]
                       }
                       resolvedRoutes={
                         resolvedRoutes
                       }
-                      onPlaceSelect={
-                        setSelectedPlace
-                      }
+                      onPlaceSelect={(
+                        place,
+                      ) => {
+                        setSelectedPlace(
+                          place,
+                        )
+
+                        if (place) {
+                          setSelectedDayId(
+                            day.id,
+                          )
+                        }
+                      }}
                     />
                   </div>
                 ),
@@ -316,7 +469,14 @@ function AppContent() {
           </div>
 
           {/* Desktop map */}
-          <div className="relative hidden h-screen md:sticky md:top-0 md:block">
+          <div
+            className="
+              relative hidden
+              h-screen
+              md:sticky md:top-0
+              md:block
+            "
+          >
             <TripMap
               days={itinerary}
               resolvedPlaces={
@@ -336,11 +496,20 @@ function AppContent() {
 
           {/* Mobile map */}
           {mobileView === 'map' && (
-            <div className="relative h-[calc(100dvh-116px)] md:hidden">
+            <div
+              className="
+                relative
+                h-[calc(100dvh-116px)]
+                md:hidden
+              "
+            >
               <TripMap
-                days={[selectedDay]}
+                days={[
+                  selectedDay,
+                ]}
                 dayIndexOffset={
-                  selectedDayIndex >= 0
+                  selectedDayIndex >=
+                  0
                     ? selectedDayIndex
                     : 0
                 }
@@ -357,27 +526,31 @@ function AppContent() {
                   setSelectedPlace
                 }
                 navigation={
-                  selectedActivityIndex >= 0
+                  selectedActivityIndex >=
+                  0
                     ? {
-                      current:
-                        currentActivityIndex + 1,
-                      total:
-                        mapActivities.length,
-                      onPrevious:
-                        previousActivity
-                          ? () =>
-                            setSelectedPlace(
-                              previousActivity,
-                            )
-                          : undefined,
-                      onNext:
-                        nextActivity
-                          ? () =>
-                            setSelectedPlace(
-                              nextActivity,
-                            )
-                          : undefined,
-                    }
+                        current:
+                          currentActivityIndex +
+                          1,
+                        total:
+                          mapActivities.length,
+
+                        onPrevious:
+                          previousActivity
+                            ? () =>
+                                setSelectedPlace(
+                                  previousActivity,
+                                )
+                            : undefined,
+
+                        onNext:
+                          nextActivity
+                            ? () =>
+                                setSelectedPlace(
+                                  nextActivity,
+                                )
+                            : undefined,
+                      }
                     : undefined
                 }
               />
@@ -394,9 +567,11 @@ function AppContent() {
           className="drawer-overlay"
         />
 
-        <Sidebar
-          days={itinerary}
-        />
+      <Sidebar
+        days={itinerary}
+        selectedDayId={selectedDayId}
+        onDaySelect={handleDaySelect}
+      />
       </div>
     </div>
   )

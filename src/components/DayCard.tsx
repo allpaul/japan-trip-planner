@@ -78,7 +78,6 @@ import {
   
     return (
       <section
-        id={day.id}
         className="mb-12 scroll-mt-6"
       >
         {/* Collapsible day heading */}
@@ -119,7 +118,7 @@ import {
             )}
           </div>
   
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 pr-3">
             <h2
               className="
                 text-[26px] font-bold
@@ -189,7 +188,7 @@ import {
         </button>
   
         {isExpanded && (
-          <div className="pl-10">
+          <div className="pl-3 pr-3">
             {/* Check-out hotel first */}
             {day.checkOut && (
               <div className="mb-3">
