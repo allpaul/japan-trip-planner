@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useMapsLibrary } from '@vis.gl/react-google-maps'
 
 import type {
-    Accommodation,
+  Accommodation,
   Day,
   ResolvedPlace,
   ResolvedPlaces,
@@ -28,10 +28,6 @@ function useResolvedPlaces(days: Day[]) {
             '{}',
         )
 
-      /*
-       * Get all activities that have
-       * a Google Place ID.
-       */
       const activities = days
         .flatMap((day) => day.activities)
         .filter(
@@ -39,33 +35,23 @@ function useResolvedPlaces(days: Day[]) {
             activity.googlePlaceId,
         )
 
-      /*
-       * Get the accommodation for each day.
-       */
-        const accommodations = days
-            .map((day) => day.accommodation)
-            .filter(
-                (
-                    accommodation,
-                ): accommodation is Accommodation =>
-                    accommodation !== undefined &&
-                    Boolean(accommodation.googlePlaceId),
-            )
+      const accommodations = days
+        .map((day) => day.accommodation)
+        .filter(
+          (
+            accommodation,
+          ): accommodation is Accommodation =>
+            accommodation !== undefined &&
+            Boolean(
+              accommodation.googlePlaceId,
+            ),
+        )
 
-      /*
-       * Activities and accommodation are both
-       * places that need resolving.
-       */
       const places = [
         ...activities,
         ...accommodations,
       ]
 
-      /*
-       * The same hotel may appear on several
-       * days. Use its ID as the Map key so it
-       * only needs to be resolved once.
-       */
       const uniquePlaces = [
         ...new Map(
           places.map((place) => [
@@ -75,10 +61,6 @@ function useResolvedPlaces(days: Day[]) {
         ).values(),
       ]
 
-      /*
-       * Don't request places that we already
-       * have in localStorage.
-       */
       const placesToFetch =
         uniquePlaces.filter(
           (place) =>
@@ -101,7 +83,6 @@ function useResolvedPlaces(days: Day[]) {
                   'formattedAddress',
                   'rating',
                   'googleMapsURI',
-                  'photos',
                   'editorialSummary',
                 ],
               })
@@ -130,15 +111,12 @@ function useResolvedPlaces(days: Day[]) {
 
                   location: place.location
                     ? {
-                        lat: place.location.lat(),
-                        lng: place.location.lng(),
+                        lat:
+                          place.location.lat(),
+                        lng:
+                          place.location.lng(),
                       }
                     : undefined,
-
-                  photoUrl:
-                    place.photos?.[0]?.getURI({
-                      maxWidth: 800,
-                    }) ?? undefined,
                 }
 
               return [

@@ -7,6 +7,8 @@ import {
     X,
   } from 'lucide-react'
   
+  import usePlacePhoto from '../hooks/usePlacePhoto'
+  
   import type {
     ResolvedPlace,
     SelectablePlace,
@@ -30,6 +32,10 @@ import {
     onClose,
     navigation,
   }: PlaceDetailsProps) {
+    const photo = usePlacePhoto(
+      activity.googlePlaceId,
+    )
+  
     if (!place) {
       return null
     }
@@ -42,15 +48,56 @@ import {
           rounded-3xl bg-base-100
         "
       >
-        {place.photoUrl && (
-          <img
-            src={place.photoUrl}
-            alt={
-              place.displayName ??
-              activity.name
-            }
-            className="h-40 w-full object-cover"
-          />
+        {photo && (
+          <div className="relative">
+            <img
+              src={photo.url}
+              alt={
+                place.displayName ??
+                activity.name
+              }
+              className="
+                h-40 w-full
+                rounded-t-3xl
+                object-cover
+              "
+            />
+  
+            {photo.attribution && (
+              <div
+                className="
+                  absolute bottom-2 right-2
+                  rounded bg-base-100
+                  px-2 py-1
+                  text-[10px]
+                  text-base-content/70
+                "
+              >
+                Photo by{' '}
+                {photo.attribution.uri ? (
+                  <a
+                    href={
+                      photo.attribution.uri
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                    className="
+                      underline
+                      hover:text-base-content
+                    "
+                  >
+                    {
+                      photo.attribution
+                        .displayName
+                    }
+                  </a>
+                ) : (
+                  photo.attribution
+                    .displayName
+                )}
+              </div>
+            )}
+          </div>
         )}
   
         <div className="relative p-5">
@@ -135,8 +182,10 @@ import {
                       navigation.onPrevious
                     }
                     className="
-                      flex h-9 w-9 cursor-pointer
-                      items-center justify-center
+                      flex h-9 w-9
+                      cursor-pointer
+                      items-center
+                      justify-center
                       rounded-full
                       hover:bg-base-200
                       disabled:cursor-default
@@ -164,8 +213,10 @@ import {
                       navigation.onNext
                     }
                     className="
-                      flex h-9 w-9 cursor-pointer
-                      items-center justify-center
+                      flex h-9 w-9
+                      cursor-pointer
+                      items-center
+                      justify-center
                       rounded-full
                       hover:bg-base-200
                       disabled:cursor-default

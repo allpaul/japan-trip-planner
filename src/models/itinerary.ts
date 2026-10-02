@@ -29,11 +29,12 @@ export interface Location {
     googlePlaceId?: string
     location?: Location
   }
-  
-  export interface SelectablePlace {
+
+    export interface SelectablePlace {
     id: string
     name: string
-  }
+    googlePlaceId?: string
+    }
 
   export interface Day {
     id: string
@@ -54,7 +55,6 @@ export interface Location {
     formattedAddress?: string
     rating?: number
     googleMapsURI?: string
-    photoUrl?: string
     editorialSummary?: string
   }
   
