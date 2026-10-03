@@ -440,20 +440,23 @@ function AppContent() {
                       flex shrink-0
                       items-end
                       justify-end
-                      gap-4
-                      pr-1
+                      pr-0
+                      min-[450px]:pr-1
                       md:gap-6
                       md:pr-3
+                      gap-3
+                      min-[450px]:gap-4
                     "
                   >
                     <img
                       src={onigiriP}
                       alt=""
                       className="
-                        h-24 w-auto
+                        h-28 w-auto
                         object-contain
                         animate-gentle-tilt
                         sm:h-28
+                        pb-[1.5px]
                       "
                     />
 
@@ -461,7 +464,7 @@ function AppContent() {
                       src={sushiB}
                       alt=""
                       className="
-                        h-24 w-auto
+                        h-28 w-auto
                         object-contain
                         animate-gentle-tilt-reverse
                         sm:h-28
