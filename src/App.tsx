@@ -347,78 +347,96 @@ function AppContent() {
                   md:p-6
                 "
               >
-                <div className="pr-28">
-                  <p
-                    className="
-                      text-sm font-semibold
-                      uppercase
-                      tracking-[0.2em]
-                      text-primary
-                    "
-                  >
-                    Japan 2026
-                  </p>
+                <div
+                  className="
+                    flex items-end
+                    justify-between
+                    gap-2
+                  "
+                >
+                  {/* Hero text */}
+                  <div className="min-w-0">
+                    <p
+                      className="
+                        text-sm font-semibold
+                        uppercase
+                        tracking-[0.2em]
+                        text-primary
+                      "
+                    >
+                      Japan 2026
+                    </p>
 
-                  <h1
-                    className="
-                      mt-1 text-3xl
-                      font-bold
-                      tracking-tight
-                    "
-                  >
-                    Buhbee-san in Japan
-                  </h1>
+                    <h1
+                      className="
+                        mt-1 text-3xl
+                        font-bold
+                        tracking-tight
+                      "
+                    >
+                      Buhbee-san in Japan
+                    </h1>
 
-                  <div
-                    className="
-                      mt-4 flex
-                      flex-wrap gap-4
-                      text-sm
-                      text-base-content/60
-                    "
-                  >
-                    <div className="flex items-center gap-2">
-                      <CalendarDays className="h-4 w-4" />
+                    <div
+                      className="
+                        mt-4 flex
+                        flex-wrap gap-4
+                        text-sm
+                        text-base-content/60
+                      "
+                    >
+                      <div className="flex items-center gap-2">
+                        <CalendarDays className="h-4 w-4" />
 
-                      <span>
-                        24 Oct – 9 Nov
-                      </span>
-                    </div>
+                        <span>
+                          24 Oct – 9 Nov
+                        </span>
+                      </div>
 
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
 
-                      <span>
-                        17 days
-                      </span>
+                        <span>
+                          17 days
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <img
-                    src={onigiriP}
-                    alt=""
+                  {/* Characters */}
+                  <div
                     className="
-                      absolute bottom-6
-                      right-30
-                      h-28 w-auto
-                      origin-bottom
-                      object-contain
-                      animate-gentle-tilt
+                      flex shrink-0
+                      items-end
+                      gap-0
+                      pt-3
                     "
-                  />
+                  >
+            <img
+              src={onigiriP}
+              alt=""
+              className="
+                -mt-6
+                h-28 w-auto
+                object-contain
+                animate-gentle-tilt
+                pb-1
+                pr-4
+              "
+            />
 
-                  <img
-                    src={sushiB}
-                    alt=""
-                    className="
-                      absolute bottom-5
-                      right-4
-                      h-28 w-auto
-                      origin-bottom
-                      object-contain
-                      animate-gentle-tilt-reverse
-                    "
-                  />
+            <img
+              src={sushiB}
+              alt=""
+              className="
+                -mt-6
+                h-28 w-auto
+                object-contain
+                animate-gentle-tilt-reverse
+              "
+            />
+              
+                  </div>
                 </div>
               </div>
             </div>
@@ -503,57 +521,28 @@ function AppContent() {
                 md:hidden
               "
             >
-              <TripMap
-                days={[
-                  selectedDay,
-                ]}
-                dayIndexOffset={
-                  selectedDayIndex >=
-                  0
-                    ? selectedDayIndex
-                    : 0
-                }
-                resolvedPlaces={
-                  resolvedPlaces
-                }
-                resolvedRoutes={
-                  resolvedRoutes
-                }
-                selectedPlace={
-                  selectedPlace
-                }
-                onPlaceSelect={
-                  setSelectedPlace
-                }
-                navigation={
-                  selectedActivityIndex >=
-                  0
-                    ? {
-                        current:
-                          currentActivityIndex +
-                          1,
-                        total:
-                          mapActivities.length,
-
-                        onPrevious:
-                          previousActivity
-                            ? () =>
-                                setSelectedPlace(
-                                  previousActivity,
-                                )
-                            : undefined,
-
-                        onNext:
-                          nextActivity
-                            ? () =>
-                                setSelectedPlace(
-                                  nextActivity,
-                                )
-                            : undefined,
-                      }
-                    : undefined
-                }
-              />
+            <TripMap
+              days={itinerary}
+              focusDays={[selectedDay]}
+              resolvedPlaces={resolvedPlaces}
+              resolvedRoutes={resolvedRoutes}
+              selectedPlace={selectedPlace}
+              onPlaceSelect={setSelectedPlace}
+              navigation={
+                selectedActivityIndex >= 0
+                  ? {
+                      current: currentActivityIndex + 1,
+                      total: mapActivities.length,
+                      onPrevious: previousActivity
+                        ? () => setSelectedPlace(previousActivity)
+                        : undefined,
+                      onNext: nextActivity
+                        ? () => setSelectedPlace(nextActivity)
+                        : undefined,
+                    }
+                  : undefined
+              }
+            />
             </div>
           )}
         </main>

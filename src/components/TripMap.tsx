@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
+
 import {
   AdvancedMarker,
   Map,
   useMap,
   useMapsLibrary,
 } from '@vis.gl/react-google-maps'
+
 import {
   BedDouble,
   MapPin,
@@ -24,13 +26,31 @@ import PlaceDetails from './PlaceDetails'
 
 interface TripMapProps {
   days: Day[]
+
+  /*
+   * Optional subset of days used only
+   * when deciding what the map should
+   * fit to when nothing is selected.
+   *
+   * Markers still come from `days`.
+   */
+  focusDays?: Day[]
+
   dayIndexOffset?: number
+
   resolvedPlaces: ResolvedPlaces
   resolvedRoutes: ResolvedRoutes
-  selectedPlace: SelectablePlace | null
+
+  selectedPlace:
+    | SelectablePlace
+    | null
+
   onPlaceSelect: (
-    place: SelectablePlace | null,
+    place:
+      | SelectablePlace
+      | null,
   ) => void
+
   navigation?: {
     current: number
     total: number
@@ -41,6 +61,7 @@ interface TripMapProps {
 
 function TripMap({
   days,
+  focusDays,
   dayIndexOffset = 0,
   resolvedPlaces,
   resolvedRoutes,
@@ -64,6 +85,7 @@ function TripMap({
       >
         <TripMapContent
           days={days}
+          focusDays={focusDays}
           dayIndexOffset={
             dayIndexOffset
           }
@@ -88,6 +110,7 @@ function TripMap({
 
 function TripMapContent({
   days,
+  focusDays,
   dayIndexOffset = 0,
   resolvedPlaces,
   resolvedRoutes,
@@ -100,6 +123,12 @@ function TripMapContent({
   const mapsLibrary =
     useMapsLibrary('maps')
 
+  /*
+   * ALL activities supplied to the map.
+   *
+   * These determine which markers are
+   * actually rendered.
+   */
   const activities = days.flatMap(
     (day, dayIndex) =>
       day.activities.map(
@@ -116,6 +145,9 @@ function TripMapContent({
       ),
   )
 
+  /*
+   * ALL accommodation supplied to map.
+   */
   const accommodations = [
     ...new globalThis.Map(
       days
@@ -136,15 +168,65 @@ function TripMapContent({
         ),
     ).values(),
   ]
+
+  /*
+   * Fit the map.
+   *
+   * IMPORTANT:
+   *
+   * Markers use `days`.
+   *
+   * Bounds use `focusDays` when
+   * supplied.
+   *
+   * This means mobile can display
+   * every trip marker while fitting
+   * back to the selected day when
+   * the details card is closed.
+   */
   useEffect(() => {
-    if (!map || selectedPlace) {
+    if (
+      !map ||
+      selectedPlace
+    ) {
       return
     }
-  
+
+    const daysForBounds =
+      focusDays ?? days
+
+    const activitiesForBounds =
+      daysForBounds.flatMap(
+        (day) =>
+          day.activities,
+      )
+
+    const accommodationsForBounds =
+      [
+        ...new globalThis.Map(
+          daysForBounds
+            .map(
+              (day) =>
+                day.accommodation,
+            )
+            .filter(
+              (accommodation) =>
+                accommodation !==
+                undefined,
+            )
+            .map(
+              (accommodation) => [
+                accommodation.id,
+                accommodation,
+              ],
+            ),
+        ).values(),
+      ]
+
     const locations = [
-      ...activities
+      ...activitiesForBounds
         .map(
-          ({ activity }) =>
+          (activity) =>
             resolvedPlaces[
               activity.id
             ]?.location,
@@ -157,8 +239,8 @@ function TripMapContent({
             lng: number
           } => Boolean(location),
         ),
-  
-      ...accommodations
+
+      ...accommodationsForBounds
         .map(
           (accommodation) =>
             resolvedPlaces[
@@ -174,17 +256,25 @@ function TripMapContent({
           } => Boolean(location),
         ),
     ]
-  
-    if (locations.length === 0) {
+
+    if (
+      locations.length === 0
+    ) {
       return
     }
-  
-    if (locations.length === 1) {
-      map.setCenter(locations[0])
+
+    if (
+      locations.length === 1
+    ) {
+      map.setCenter(
+        locations[0],
+      )
+
       map.setZoom(15)
+
       return
     }
-  
+
     const bounds = {
       north: Math.max(
         ...locations.map(
@@ -192,21 +282,21 @@ function TripMapContent({
             location.lat,
         ),
       ),
-  
+
       south: Math.min(
         ...locations.map(
           (location) =>
             location.lat,
         ),
       ),
-  
+
       east: Math.max(
         ...locations.map(
           (location) =>
             location.lng,
         ),
       ),
-  
+
       west: Math.min(
         ...locations.map(
           (location) =>
@@ -214,19 +304,24 @@ function TripMapContent({
         ),
       ),
     }
-  
-    map.fitBounds(bounds, {
-      top: 70,
-      right: 50,
-      bottom: 70,
-      left: 50,
-    })
+
+    map.fitBounds(
+      bounds,
+      {
+        top: 70,
+        right: 50,
+        bottom: 70,
+        left: 50,
+      },
+    )
   }, [
     map,
     days,
+    focusDays,
     resolvedPlaces,
     selectedPlace,
   ])
+
   /*
    * Zoom to selected activity
    * or selected hotel.
@@ -271,15 +366,23 @@ function TripMapContent({
       color: string,
     ) => {
       if (
-        !color.startsWith('var(')
+        !color.startsWith(
+          'var(',
+        )
       ) {
         return color
       }
 
       const variableName =
         color
-          .replace('var(', '')
-          .replace(')', '')
+          .replace(
+            'var(',
+            '',
+          )
+          .replace(
+            ')',
+            '',
+          )
           .trim()
 
       return getComputedStyle(
@@ -291,9 +394,10 @@ function TripMapContent({
         .trim()
     }
 
-    const polylines: InstanceType<
+    const polylines:
+      InstanceType<
         typeof mapsLibrary.Polyline
-    >[] = []
+      >[] = []
 
     days.forEach(
       (day, dayIndex) => {
@@ -318,7 +422,8 @@ function TripMapContent({
             ) => {
               const nextActivity =
                 day.activities[
-                  activityIndex + 1
+                  activityIndex +
+                    1
                 ]
 
               const route =
@@ -331,8 +436,8 @@ function TripMapContent({
 
               if (
                 !route?.path ||
-                route.path.length <
-                  2
+                route.path
+                  .length < 2
               ) {
                 return
               }
@@ -341,12 +446,14 @@ function TripMapContent({
                 new mapsLibrary.Polyline(
                   {
                     map,
-                    path: route.path,
+                    path:
+                      route.path,
                     strokeColor:
                       color,
                     strokeOpacity:
                       0.9,
-                    strokeWeight: 6,
+                    strokeWeight:
+                      6,
                   },
                 )
 
@@ -406,7 +513,9 @@ function TripMapContent({
           return (
             <AdvancedMarker
               key={activity.id}
-              position={location}
+              position={
+                location
+              }
               onClick={() =>
                 onPlaceSelect(
                   activity,
@@ -433,10 +542,15 @@ function TripMapContent({
               >
                 {/* White outline */}
                 <MapPin
-                  className="absolute inset-0 h-10 w-10"
+                  className="
+                    absolute inset-0
+                    h-10 w-10
+                  "
                   style={{
-                    fill: 'white',
-                    color: 'white',
+                    fill:
+                      'white',
+                    color:
+                      'white',
                   }}
                   strokeWidth={1}
                 />
@@ -497,7 +611,9 @@ function TripMapContent({
               key={
                 accommodation.id
               }
-              position={location}
+              position={
+                location
+              }
               onClick={() =>
                 onPlaceSelect(
                   accommodation,
@@ -524,10 +640,15 @@ function TripMapContent({
               >
                 {/* White outline */}
                 <MapPin
-                  className="absolute inset-0 h-10 w-10"
+                  className="
+                    absolute inset-0
+                    h-10 w-10
+                  "
                   style={{
-                    fill: 'white',
-                    color: 'white',
+                    fill:
+                      'white',
+                    color:
+                      'white',
                   }}
                   strokeWidth={1}
                 />
@@ -555,7 +676,9 @@ function TripMapContent({
                     -translate-y-1/2
                     text-pink-600
                   "
-                  strokeWidth={2.5}
+                  strokeWidth={
+                    2.5
+                  }
                 />
               </div>
             </AdvancedMarker>
@@ -563,6 +686,7 @@ function TripMapContent({
         },
       )}
 
+      {/* Selected place */}
       {selectedPlace && (
         <PlaceDetails
           activity={
@@ -574,9 +698,13 @@ function TripMapContent({
             ]
           }
           onClose={() =>
-            onPlaceSelect(null)
+            onPlaceSelect(
+              null,
+            )
           }
-          navigation={navigation}
+          navigation={
+            navigation
+          }
         />
       )}
     </>

@@ -729,7 +729,7 @@ export const itinerary: Day[] = [
                 id: 'momijidani-park',
                 name: 'Momijidani Park',
                 notes: 'Walk through the maple-filled park towards the Miyajima Ropeway.',
-                googlePlaceId: '...',
+                googlePlaceId: 'ChIJdS8mkbewWjUR580CS14cuiI',
                 transportToNext: {
                     mode: 'transit',
                     name: 'Miyajima Ropeway',
