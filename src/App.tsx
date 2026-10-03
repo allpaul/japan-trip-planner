@@ -312,7 +312,9 @@ function AppContent() {
           </div>
         </div>
 
-        <main className="grid md:grid-cols-[minmax(0,1fr)_minmax(400px,40%)]">
+        <main className="grid 
+        md:grid-cols-[minmax(0,1fr)_minmax(350px,35%)]
+        xl:grid-cols-[minmax(0,1fr)_minmax(450px,40%)]">
           {/* Itinerary */}
           <div
             className={`
@@ -351,9 +353,10 @@ function AppContent() {
                 <div
                   className="
                     grid
-                    grid-cols-[minmax(0,1fr)_auto]
+                    grid-cols-[55%_45%]
                     items-center
                     gap-2
+                    sm:gap-1
                   "
                 >
                   {/* Hero text */}
@@ -373,10 +376,9 @@ function AppContent() {
                   <h1
                     className="
                       mt-2
-                      text-3xl font-bold
+                      text-3xl sm:text-3xl md:text-4xl font-bold
                       leading-tight
                       tracking-tight
-                      md:text-4xl
                     "
                   >
                     Buhbee-san in Japan
@@ -413,8 +415,11 @@ function AppContent() {
                     className="
                       flex shrink-0
                       items-end
-                      gap-0
-                      pr-3
+                      justify-end
+                      gap-4
+                      md:gap-6
+                      pr-1
+                      md:pr-3
                     "
                   >
                     <img
@@ -423,11 +428,8 @@ function AppContent() {
                       className="
                         h-24 w-auto
                         object-contain
-                        pr-2
                         animate-gentle-tilt
                         sm:h-28
-                        sm:pr-6
-                        mr-2
                       "
                     />
 
