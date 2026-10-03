@@ -332,6 +332,7 @@ function AppContent() {
                 className="
                   h-72 w-full
                   object-cover
+                  md:h-72
                 "
               />
 
@@ -341,62 +342,66 @@ function AppContent() {
                   mx-3 -mt-10
                   rounded-3xl
                   bg-base-100
-                  p-4
                   shadow-xl
                   md:mx-6
                   md:p-6
+                  p-5
                 "
               >
                 <div
                   className="
-                    flex items-end
-                    justify-between
+                    grid
+                    grid-cols-[minmax(0,1fr)_auto]
+                    items-center
                     gap-2
                   "
                 >
                   {/* Hero text */}
                   <div className="min-w-0">
-                    <p
-                      className="
-                        text-sm font-semibold
-                        uppercase
-                        tracking-[0.2em]
-                        text-primary
-                      "
-                    >
-                      Japan 2026
-                    </p>
+                  <p
+                  className="
+                    text-sm font-semibold
+                    uppercase
+                    tracking-[0.2em]
+                    text-primary
+                
+                  "
+                >
+                  Japan 2026
+                </p>
 
-                    <h1
-                      className="
-                        mt-1 text-3xl
-                        font-bold
-                        tracking-tight
-                      "
-                    >
-                      Buhbee-san in Japan
-                    </h1>
+                  <h1
+                    className="
+                      mt-2
+                      text-3xl font-bold
+                      leading-tight
+                      tracking-tight
+                      md:text-4xl
+                    "
+                  >
+                    Buhbee-san in Japan
+                  </h1>
 
-                    <div
-                      className="
-                        mt-4 flex
-                        flex-wrap gap-4
-                        text-sm
-                        text-base-content/60
-                      "
-                    >
+                  <div
+                    className="
+                      mt-4 flex flex-wrap
+                      gap-4
+                      text-xs
+                      text-base-content/60
+                    "
+                  >
                       <div className="flex items-center gap-2">
-                        <CalendarDays className="h-4 w-4" />
+                        <CalendarDays className="h-4 w-4 shrink-0" />
 
-                        <span>
+                        <span className="whitespace-nowrap">
                           24 Oct – 9 Nov
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4" />
+                        <Clock className="h-4 w-4 shrink-0" />
 
-                        <span>
+                        <span className="whitespace-nowrap">
                           17 days
                         </span>
                       </div>
@@ -409,40 +414,46 @@ function AppContent() {
                       flex shrink-0
                       items-end
                       gap-0
-                      pt-3
+                      pr-3
                     "
                   >
-            <img
-              src={onigiriP}
-              alt=""
-              className="
-                -mt-6
-                h-28 w-auto
-                object-contain
-                animate-gentle-tilt
-                pb-1
-                pr-4
-              "
-            />
+                    <img
+                      src={onigiriP}
+                      alt=""
+                      className="
+                        h-24 w-auto
+                        object-contain
+                        pr-2
+                        animate-gentle-tilt
+                        sm:h-28
+                        sm:pr-6
+                        mr-2
+                      "
+                    />
 
-            <img
-              src={sushiB}
-              alt=""
-              className="
-                -mt-6
-                h-28 w-auto
-                object-contain
-                animate-gentle-tilt-reverse
-              "
-            />
-              
+                    <img
+                      src={sushiB}
+                      alt=""
+                      className="
+                        h-24 w-auto
+                        object-contain
+                        animate-gentle-tilt-reverse
+                        sm:h-28
+                      "
+                    />
                   </div>
                 </div>
               </div>
-            </div>
+</div>
 
             {/* Days */}
-          <div className="mx-auto max-w-3xl px-6 py-10">
+            <div
+              className="
+                mx-auto max-w-3xl
+                px-3 py-6
+                md:px-6 md:py-10
+              "
+            >
               {itinerary.map(
                 (
                   day,
