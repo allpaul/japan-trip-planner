@@ -355,8 +355,8 @@ function AppContent() {
                     grid
                     grid-cols-[55%_45%]
                     items-center
-                    gap-2
-                    sm:gap-1
+                    gap-0
+                    md:gap-2
                   "
                 >
                   {/* Hero text */}
