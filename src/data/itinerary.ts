@@ -5,7 +5,7 @@ export const itinerary: Day[] = [
         id: '2026-10-24',
         date: '2026-10-24',
         city: 'Tokyo',
-        title: 'Arrival & Central Tokyo',
+        title: 'Arrival & Nakameguro',
         accommodation: {
             id: 'waves-nakameguro',
             name: 'waves nakameguro',
@@ -21,11 +21,13 @@ export const itinerary: Day[] = [
                 id: 'haneda-airport',
                 name: 'Haneda Airport',
                 time: '5:25 AM',
-                notes: 'Arrive in Tokyo.',
+                notes: 'Arrive in Tokyo. Clear immigration, collect luggage and travel towards Nakameguro.',
                 googlePlaceId: 'ChIJ45IxpAtkGGAR3_hG0anDMg0',
                 transportToNext: {
                     mode: 'transit',
                     name: 'Train into Tokyo',
+                    from: 'Haneda Airport',
+                    to: 'Nakameguro',
                 },
             },
             {
@@ -39,20 +41,40 @@ export const itinerary: Day[] = [
                 },
             },
             {
-                id: 'nakameguro',
-                name: 'Nakameguro',
-                notes: 'Explore the neighbourhood and take the first day fairly easy.',
-                googlePlaceId: 'ChIJAas2LziLGGAROimsxcM_Rqo',
-                transportToNext: {
-                    mode: 'transit',
-                    name: 'Train to Shibuya',
-                },
+                id: 'waves-bag-drop',
+                name: 'waves nakameguro',
+                notes: 'If too tired for Tsukiji. Drop off luggage before exploring. Keep the first morning flexible depending on how you feel after the flight.',
+                googlePlaceId: 'ChIJO_ouFkmLGGARxaczihl-Yrc',
             },
             {
-                id: 'shibuya',
-                name: 'Shibuya',
-                googlePlaceId: 'ChIJ0Qgx67KMGGARd2ZbObLZHPE',
-                notes: 'Wander around Shibuya and have a casual first evening.',
+                id: 'nakameguro',
+                name: 'Nakameguro',
+                notes: 'Have breakfast or coffee and explore the neighbourhood at an easy pace.',
+                googlePlaceId: 'ChIJAas2LziLGGAROimsxcM_Rqo',
+            },
+            {
+                id: 'daikanyama',
+                name: 'Daikanyama',
+                notes: 'Wander through Daikanyama if you have the energy. Easy to combine with Nakameguro.',
+                googlePlaceId: 'ChIJ68vK5kSLGGARoiBaKr3YZgU'
+            },
+            {
+                id: 'hotel-rest',
+                name: 'Check in & rest',
+                notes: 'Check in when the room is available and have some downtime after the overnight flight.',
+                googlePlaceId: 'ChIJO_ouFkmLGGARxaczihl-Yrc',
+            },
+            {
+                id: 'ebisu',
+                name: 'Ebisu',
+                notes: 'Head to Ebisu for a casual first evening. Food and drinks around Ebisu Yokocho are an option if you feel up to it.',
+                googlePlaceId: 'ChIJ06N2yEGLGGARycMkSbjIBYQ',
+                transportToNext: {
+                    mode: 'transit',
+                    name: 'Train / walk',
+                    from: 'Nakameguro',
+                    to: 'Ebisu',
+                },
             },
         ],
     },
@@ -77,6 +99,7 @@ export const itinerary: Day[] = [
                 id: 'harajuku',
                 name: 'Harajuku',
                 notes: 'Explore Harajuku before heading towards Omotesando.',
+                googlePlaceId: 'ChIJ5V1T5KKMGGARlTLiBrjIGUg',
             },
             {
                 id: 'omotesando-hills',
@@ -271,7 +294,7 @@ export const itinerary: Day[] = [
         id: '2026-10-29',
         date: '2026-10-29',
         city: 'Kyoto',
-        title: 'Kanazawa → Kyoto & teamLab',
+        title: 'Kanazawa → Kyoto, Nijō Castle & teamLab',
         accommodation: {
             id: 'legasta-kyoto',
             name: 'HOTEL LEGASTA KYOTO SHIRAKAWA SANJO',
@@ -289,9 +312,14 @@ export const itinerary: Day[] = [
         },
         activities: [
             {
+                id: 'kanazawa-morning',
+                name: 'Kanazawa',
+                notes: 'Have a relaxed final morning in Kanazawa before travelling to Kyoto. Aim to leave around 10:30–11:00 AM.',
+            },
+            {
                 id: 'kanazawa-to-kyoto',
                 name: 'Kanazawa → Kyoto',
-                notes: 'Hokuriku Shinkansen to Tsuruga, then Thunderbird to Kyoto.',
+                notes: 'Hokuriku Shinkansen to Tsuruga, then Thunderbird to Kyoto. Drop luggage at LEGASTA after arriving.',
                 transportToNext: {
                     mode: 'transit',
                     name: 'Shinkansen + Thunderbird',
@@ -300,10 +328,23 @@ export const itinerary: Day[] = [
                 },
             },
             {
+                id: 'nijo-castle',
+                name: 'Nijō Castle',
+                time: '2:00 PM',
+                notes: 'Explore the castle and Ninomaru Palace. Allow around 1.5 hours. Skip if the journey from Kanazawa is delayed rather than rushing teamLab.',
+                googlePlaceId: 'ChIJC5srCtQHAWARLy9qkFmHaxA',
+                transportToNext: {
+                    mode: 'transit',
+                    name: 'Train / subway to teamLab',
+                    from: 'Nijō Castle',
+                    to: 'teamLab Biovortex Kyoto',
+                },
+            },
+            {
                 id: 'teamlab-biovortex-kyoto',
                 name: 'teamLab Biovortex Kyoto',
                 time: '5:30 PM',
-                notes: 'Booked entrance pass · 2 adults.',
+                notes: 'Booked entrance pass · 2 adults. Allow around 2.5–3 hours.',
                 googlePlaceId: 'ChIJUW4XawAJAWARO8Dp88_nego',
             },
         ],
@@ -312,7 +353,7 @@ export const itinerary: Day[] = [
         id: '2026-10-30',
         date: '2026-10-30',
         city: 'Kyoto',
-        title: 'Higashiyama & Knife Making',
+        title: 'Fushimi Inari, Higashiyama & Knife Making',
         accommodation: {
             id: 'legasta-kyoto',
             name: 'HOTEL LEGASTA KYOTO SHIRAKAWA SANJO',
@@ -320,9 +361,23 @@ export const itinerary: Day[] = [
         },
         activities: [
             {
+                id: 'fushimi-inari',
+                name: 'Fushimi Inari Taisha',
+                time: '6:30 AM',
+                notes: 'Start early before the crowds. Walk beyond the busy lower torii gates; no need to hike all the way to the summit.',
+                googlePlaceId: 'ChIJIW0uPRUPAWAR6eI6dRzKGns',
+                transportToNext: {
+                    mode: 'transit',
+                    name: 'Keihan Line',
+                    from: 'Fushimi Inari',
+                    to: 'Kiyomizu-Gojo',
+                },
+            },
+            {
                 id: 'kiyomizudera',
                 name: 'Kiyomizu-dera',
-                notes: 'Start the morning at Kiyomizu-dera.',
+                time: '9:00 AM',
+                notes: 'Visit after Fushimi Inari before exploring Higashiyama.',
                 googlePlaceId: 'ChIJB_vchdMIAWARujTEUIZlr2I',
             },
             {
@@ -376,7 +431,7 @@ export const itinerary: Day[] = [
         id: '2026-10-31',
         date: '2026-10-31',
         city: 'Kyoto',
-        title: 'Arashiyama & Fushimi Inari',
+        title: 'Arashiyama & Halloween in Kyoto',
         accommodation: {
             id: 'legasta-kyoto',
             name: 'HOTEL LEGASTA KYOTO SHIRAKAWA SANJO',
@@ -393,31 +448,40 @@ export const itinerary: Day[] = [
             {
                 id: 'tenryuji',
                 name: 'Tenryū-ji',
+                time: '8:30 AM',
                 notes: 'Explore the Zen temple and gardens.',
                 googlePlaceId: 'ChIJk54PuAGqAWARwEgz_9o-nM0',
             },
             {
                 id: 'arashiyama-monkey-park',
                 name: 'Arashiyama Monkey Park Iwatayama',
+                time: '10:00 AM',
                 notes: 'Walk up to the monkey park and viewpoint.',
                 googlePlaceId: 'ChIJvUn7bqsAAWARsjQHQ7CTNBs',
-                transportToNext: {
-                    mode: 'transit',
-                    name: 'Train across Kyoto',
-                    from: 'Arashiyama',
-                    to: 'Fushimi Inari',
-                },
             },
             {
-                id: 'fushimi-inari',
-                name: 'Fushimi Inari Taisha',
-                notes: 'Walk beyond the busy lower torii gates; no need to hike all the way to the summit.',
-                googlePlaceId: 'ChIJIW0uPRUPAWAR6eI6dRzKGns',
+                id: 'arashiyama-lunch',
+                name: 'Lunch in Arashiyama',
+                notes: 'Have lunch before continuing into quieter northern Arashiyama.',
+                googlePlaceId: 'ChIJ49PvUVQHAWARTAF7WU_Wqqs',
             },
             {
-                id: 'kyoto-free-evening',
-                name: 'Kyoto',
-                notes: 'Free evening for dinner or anything missed earlier in Kyoto.',
+                id: 'saga-toriimoto',
+                name: 'Saga-Toriimoto Preserved Street',
+                time: '1:00 PM',
+                notes: 'Walk through the quieter preserved historic street in northern Arashiyama.',
+                googlePlaceId: 'ChIJI443HRiqAWARdDvT7yb5yEs',
+            },
+            {
+                id: 'adashino-nenbutsuji',
+                name: 'Adashino Nenbutsu-ji',
+                notes: 'Optional temple visit while in northern Arashiyama if you have the time and energy.',
+                googlePlaceId: 'ChIJOep9dT2qAWARHP2_vqhY5Tg',   
+            },
+            {
+                id: 'kyoto-halloween',
+                name: 'Halloween in Kyoto',
+                notes: 'Return to the hotel to rest and change. Keep the evening flexible around Gion, Pontocho and Kiyamachi. Optional Kodaiji illumination, NAKED Garden Nights or CLUB METRO depending on energy.',
             },
         ],
     },
@@ -425,7 +489,7 @@ export const itinerary: Day[] = [
         id: '2026-11-01',
         date: '2026-11-01',
         city: 'Kyoto → Osaka',
-        title: 'Kurama & Kibune',
+        title: 'Kurama, Kibune & Osaka',
         accommodation: {
             id: 'morning-box-osaka',
             name: 'Hotel Morning Box Osaka Shinsaibashi',
@@ -445,7 +509,7 @@ export const itinerary: Day[] = [
             {
                 id: 'kurama-station',
                 name: 'Kurama Station',
-                notes: 'Leave luggage at LEGASTA, then travel to Kurama. Weather-dependent hiking day.',
+                notes: 'Check out and leave luggage at LEGASTA, then travel to Kurama. Weather-dependent hiking day.',
                 googlePlaceId: 'ChIJqWaH4WqmAWARE_In5X99Eb0',
             },
             {
@@ -480,22 +544,25 @@ export const itinerary: Day[] = [
             {
                 id: 'demachiyanagi',
                 name: 'Demachiyanagi Station',
-                notes: 'Eizan Railway back from Kibuneguchi.',
+                notes: 'Arrive back from Kibuneguchi on the Eizan Railway, then return to LEGASTA to collect luggage.',
                 googlePlaceId: 'ChIJ8cdMFF0IAWAR5fsl4NH6wP8',
                 transportToNext: {
                     mode: 'transit',
                     name: 'Return to LEGASTA for luggage',
+                    from: 'Demachiyanagi',
+                    to: 'HOTEL LEGASTA KYOTO SHIRAKAWA SANJO',
                 },
             },
             {
-                id: 'kyoto-to-osaka',
-                name: 'Kyoto → Osaka',
-                notes: 'Collect luggage from LEGASTA and transfer to Osaka.',
+                id: 'kyo-train-garaku',
+                name: 'Kyo-train Garaku',
+                time: '4:41 PM',
+                notes: 'After collecting luggage, travel to Kyoto-Kawaramachi Station. Aim for the 4:41 PM Kyo-train Garaku to Osaka-Umeda. If the Kurama/Kibune day runs late, simply take a normal Hankyu service instead.',
                 transportToNext: {
                     mode: 'transit',
-                    name: 'Train',
-                    from: 'Kyoto',
-                    to: 'Osaka',
+                    name: 'Kyo-train Garaku',
+                    from: 'Kyoto-Kawaramachi',
+                    to: 'Osaka-Umeda',
                 },
             },
             {
@@ -565,7 +632,7 @@ export const itinerary: Day[] = [
                 id: 'dotonbori-nara-evening',
                 name: 'Dotonbori',
                 notes: 'Dinner and drinks if you feel like continuing.',
-                googlePlaceId: 'ChIJg2DcJhXnAGARCbeAHoZrPeQ',
+                googlePlaceId: 'ChIJ_fmKgRPnAGARkKWLtCYTu7g',
             },
         ],
     },
@@ -593,7 +660,7 @@ export const itinerary: Day[] = [
             },
             {
                 id: 'tsutenkaku',
-                name: 'Tsutenkaku & Shinsekai',
+                name: 'Shinsekai & Tsutenkaku',
                 notes: 'Explore Shinsekai.',
                 googlePlaceId: 'ChIJ_0Lgd2DnAGARV0X03lbPy-U',
                 transportToNext: {
@@ -806,7 +873,7 @@ export const itinerary: Day[] = [
         id: '2026-11-07',
         date: '2026-11-07',
         city: 'Hakone → Tokyo',
-        title: 'Hakone & Return to Tokyo',
+        title: 'Hakone Sightseeing & Return to Tokyo',
         accommodation: {
             id: 'wise-owl-river-tokyo',
             name: 'WISE OWL HOSTELS RIVER TOKYO',
@@ -824,19 +891,33 @@ export const itinerary: Day[] = [
         },
         activities: [
             {
+                id: 'hanaori-morning',
+                name: 'Hakone Ashinoko Hanaori',
+                notes: 'Breakfast and a final public onsen before checking out. Leave luggage with the hotel if needed.',
+                googlePlaceId: 'ChIJz7WQw9meGWAR8_Ijv9AMs4Q',
+            },
+            {
+                id: 'owakudani',
+                name: 'Owakudani',
+                notes: 'Take the ropeway from Togendai and explore Owakudani. Prioritise this while visibility is good for possible Fuji views.',
+                googlePlaceId: 'ChIJ15_HHo-fGWARM8GIZNQ6SdA',
+            },
+            {
                 id: 'lake-ashi',
                 name: 'Lake Ashi',
-                notes: 'Enjoy Hakone in the morning. Fuji views if the weather cooperates.',
+                notes: 'Return towards Lake Ashi and enjoy the lake scenery.',
                 googlePlaceId: 'ChIJoT-oK-mYGWARy-ItUPA6ekk',
             },
             {
-                id: 'hakone-morning',
-                name: 'Hakone',
-                notes: 'Relaxed morning / onsen before leaving for Tokyo.',
+                id: 'hakone-shrine',
+                name: 'Hakone Shrine',
+                notes: 'Visit the shrine on the Lake Ashi shoreline if timing allows before leaving Hakone.',
+                googlePlaceId: 'ChIJtcIqzYuYGWARmuDHR2ij5Ko',
             },
             {
                 id: 'hakone-to-tokyo',
                 name: 'Hakone → Tokyo',
+                notes: 'Continue to Tokyo after sightseeing.',
                 transportToNext: {
                     mode: 'transit',
                     name: 'Train',
@@ -855,7 +936,7 @@ export const itinerary: Day[] = [
         id: '2026-11-08',
         date: '2026-11-08',
         city: 'Tokyo',
-        title: 'Final Tokyo Day',
+        title: 'Fuji Weather Day or Final Tokyo Day',
         accommodation: {
             id: 'wise-owl-river-tokyo',
             name: 'WISE OWL HOSTELS RIVER TOKYO',
@@ -863,9 +944,14 @@ export const itinerary: Day[] = [
         },
         activities: [
             {
+                id: 'fuji-weather-option',
+                name: 'Kawaguchiko / Fuji Five Lakes',
+                notes: 'Weather-dependent option. Go only if the Fuji forecast and visibility are excellent; otherwise keep the day in Tokyo. Fujisan View Express is an optional train experience if timings work.',
+            },
+            {
                 id: 'tokyo-final-shopping',
                 name: 'Tokyo shopping',
-                notes: 'Final full day for shopping and anything missed earlier in the trip.',
+                notes: 'Default plan if Fuji visibility is poor. Final full day for shopping: Kappabashi, Uniqlo, Standard Products, Montbell, Snow Peak, glasses collection and anything else still on the list.',
             },
             {
                 id: 'special-meal',
@@ -878,7 +964,7 @@ export const itinerary: Day[] = [
         id: '2026-11-09',
         date: '2026-11-09',
         city: 'Tokyo',
-        title: 'Final Day & Fly Home',
+        title: 'Tsukiji, Final Shopping & Fly Home',
         checkOut: {
             id: 'wise-owl-river-tokyo',
             name: 'WISE OWL HOSTELS RIVER TOKYO',
@@ -886,14 +972,19 @@ export const itinerary: Day[] = [
         },
         activities: [
             {
+                id: 'tsukiji-fallback',
+                name: 'Tsukiji Outer Market',
+                notes: 'Morning breakfast and market visit if Tsukiji was skipped on arrival day. Otherwise use this time for final shopping.',
+            },
+            {
                 id: 'tokyo-last-morning',
-                name: 'Final morning in Tokyo',
-                notes: 'Last shopping, food and anything still on the list.',
+                name: 'Final Tokyo shopping',
+                notes: 'Pick up anything still on the shopping list and collect any outstanding purchases or glasses.',
             },
             {
                 id: 'airport-transfer',
                 name: 'Travel to the airport',
-                notes: 'Leave plenty of time for the airport.',
+                notes: 'Leave plenty of time for the airport ahead of the 8:00 PM flight.',
                 transportToNext: {
                     mode: 'transit',
                     name: 'Airport transfer',

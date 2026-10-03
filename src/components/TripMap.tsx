@@ -45,11 +45,15 @@ interface TripMapProps {
     | SelectablePlace
     | null
 
+  showPlaceDetails: boolean
+
   onPlaceSelect: (
     place:
       | SelectablePlace
       | null,
   ) => void
+
+  onClosePlaceDetails: () => void
 
   navigation?: {
     current: number
@@ -66,7 +70,9 @@ function TripMap({
   resolvedPlaces,
   resolvedRoutes,
   selectedPlace,
+  showPlaceDetails,
   onPlaceSelect,
+  onClosePlaceDetails,
   navigation,
 }: TripMapProps) {
   return (
@@ -98,8 +104,14 @@ function TripMap({
           selectedPlace={
             selectedPlace
           }
+          showPlaceDetails={
+            showPlaceDetails
+          }
           onPlaceSelect={
             onPlaceSelect
+          }
+          onClosePlaceDetails={
+            onClosePlaceDetails
           }
           navigation={navigation}
         />
@@ -115,7 +127,9 @@ function TripMapContent({
   resolvedPlaces,
   resolvedRoutes,
   selectedPlace,
+  showPlaceDetails,
   onPlaceSelect,
+  onClosePlaceDetails,
   navigation,
 }: TripMapProps) {
   const map = useMap()
@@ -172,17 +186,12 @@ function TripMapContent({
   /*
    * Fit the map.
    *
-   * IMPORTANT:
-   *
    * Markers use `days`.
+   * Bounds use `focusDays` when supplied.
    *
-   * Bounds use `focusDays` when
-   * supplied.
-   *
-   * This means mobile can display
-   * every trip marker while fitting
-   * back to the selected day when
-   * the details card is closed.
+   * Mobile can therefore show every trip
+   * marker while fitting to the selected
+   * day when there is no selected place.
    */
   useEffect(() => {
     if (
@@ -325,6 +334,10 @@ function TripMapContent({
   /*
    * Zoom to selected activity
    * or selected hotel.
+   *
+   * Closing the details card does NOT
+   * clear selectedPlace, so the map
+   * remains focused on this location.
    */
   useEffect(() => {
     if (
@@ -686,27 +699,26 @@ function TripMapContent({
         },
       )}
 
-      {/* Selected place */}
-      {selectedPlace && (
-        <PlaceDetails
-          activity={
-            selectedPlace
-          }
-          place={
-            resolvedPlaces[
-              selectedPlace.id
-            ]
-          }
-          onClose={() =>
-            onPlaceSelect(
-              null,
-            )
-          }
-          navigation={
-            navigation
-          }
-        />
-      )}
+      {/* Selected place details */}
+      {selectedPlace &&
+        showPlaceDetails && (
+          <PlaceDetails
+            activity={
+              selectedPlace
+            }
+            place={
+              resolvedPlaces[
+                selectedPlace.id
+              ]
+            }
+            onClose={
+              onClosePlaceDetails
+            }
+            navigation={
+              navigation
+            }
+          />
+        )}
     </>
   )
 }

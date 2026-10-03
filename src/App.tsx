@@ -43,6 +43,11 @@ function AppContent() {
     )
 
   const [
+    showPlaceDetails,
+    setShowPlaceDetails,
+  ] = useState(false)
+
+  const [
     selectedDayId,
     setSelectedDayId,
   ] = useState(itinerary[0].id)
@@ -70,11 +75,11 @@ function AppContent() {
    * the sticky mobile header.
    */
   useEffect(() => {
-      const isMobile =
+    const isMobile =
       window.matchMedia(
         '(max-width: 767px)',
       ).matches
-    
+
     if (
       isMobile &&
       mobileView !== 'itinerary'
@@ -199,11 +204,23 @@ function AppContent() {
     })
   }
 
+  const handlePlaceSelect = (
+    place: SelectablePlace | null,
+  ) => {
+    if (!place) {
+      return
+    }
+
+    setSelectedPlace(place)
+    setShowPlaceDetails(true)
+  }
+
   const handleDaySelect = (
     dayId: string,
   ) => {
     setSelectedDayId(dayId)
     setSelectedPlace(null)
+    setShowPlaceDetails(false)
 
     if (
       mobileView === 'itinerary'
@@ -230,6 +247,7 @@ function AppContent() {
         !selectedPlaceIsOnDay
       ) {
         setSelectedPlace(null)
+        setShowPlaceDetails(false)
       }
     }
 
@@ -312,9 +330,13 @@ function AppContent() {
           </div>
         </div>
 
-        <main className="grid 
-        md:grid-cols-[minmax(0,1fr)_minmax(350px,35%)]
-        xl:grid-cols-[minmax(0,1fr)_minmax(450px,40%)]">
+        <main
+          className="
+            grid
+            md:grid-cols-[minmax(0,1fr)_minmax(350px,40%)]
+            lg:grid-cols-[minmax(0,1fr)_minmax(450px,45%)]
+          "
+        >
           {/* Itinerary */}
           <div
             className={`
@@ -344,10 +366,10 @@ function AppContent() {
                   mx-3 -mt-10
                   rounded-3xl
                   bg-base-100
+                  p-5
                   shadow-xl
                   md:mx-6
                   md:p-6
-                  p-5
                 "
               >
                 <div
@@ -361,37 +383,39 @@ function AppContent() {
                 >
                   {/* Hero text */}
                   <div className="min-w-0">
-                  <p
-                  className="
-                    text-sm font-semibold
-                    uppercase
-                    tracking-[0.2em]
-                    text-primary
-                
-                  "
-                >
-                  Japan 2026
-                </p>
+                    <p
+                      className="
+                        text-sm font-semibold
+                        uppercase
+                        tracking-[0.2em]
+                        text-primary
+                      "
+                    >
+                      Japan 2026
+                    </p>
 
-                  <h1
-                    className="
-                      mt-2
-                      text-3xl sm:text-3xl md:text-4xl font-bold
-                      leading-tight
-                      tracking-tight
-                    "
-                  >
-                    Buhbee-san in Japan
-                  </h1>
+                    <h1
+                      className="
+                        mt-2
+                        text-3xl
+                        font-bold
+                        leading-tight
+                        tracking-tight
+                        sm:text-3xl
+                        md:text-4xl
+                      "
+                    >
+                      Buhbee-san in Japan
+                    </h1>
 
-                  <div
-                    className="
-                      mt-4 flex flex-wrap
-                      gap-4
-                      text-xs
-                      text-base-content/60
-                    "
-                  >
+                    <div
+                      className="
+                        mt-4 flex flex-wrap
+                        gap-4
+                        text-xs
+                        text-base-content/60
+                      "
+                    >
                       <div className="flex items-center gap-2">
                         <CalendarDays className="h-4 w-4 shrink-0" />
 
@@ -417,8 +441,8 @@ function AppContent() {
                       items-end
                       justify-end
                       gap-4
-                      md:gap-6
                       pr-1
+                      md:gap-6
                       md:pr-3
                     "
                   >
@@ -446,7 +470,7 @@ function AppContent() {
                   </div>
                 </div>
               </div>
-</div>
+            </div>
 
             {/* Days */}
             <div
@@ -482,11 +506,11 @@ function AppContent() {
                       onPlaceSelect={(
                         place,
                       ) => {
-                        setSelectedPlace(
-                          place,
-                        )
-
                         if (place) {
+                          handlePlaceSelect(
+                            place,
+                          )
+
                           setSelectedDayId(
                             day.id,
                           )
@@ -519,8 +543,16 @@ function AppContent() {
               selectedPlace={
                 selectedPlace
               }
+              showPlaceDetails={
+                showPlaceDetails
+              }
               onPlaceSelect={
-                setSelectedPlace
+                handlePlaceSelect
+              }
+              onClosePlaceDetails={() =>
+                setShowPlaceDetails(
+                  false,
+                )
               }
             />
           </div>
@@ -534,28 +566,60 @@ function AppContent() {
                 md:hidden
               "
             >
-            <TripMap
-              days={itinerary}
-              focusDays={[selectedDay]}
-              resolvedPlaces={resolvedPlaces}
-              resolvedRoutes={resolvedRoutes}
-              selectedPlace={selectedPlace}
-              onPlaceSelect={setSelectedPlace}
-              navigation={
-                selectedActivityIndex >= 0
-                  ? {
-                      current: currentActivityIndex + 1,
-                      total: mapActivities.length,
-                      onPrevious: previousActivity
-                        ? () => setSelectedPlace(previousActivity)
-                        : undefined,
-                      onNext: nextActivity
-                        ? () => setSelectedPlace(nextActivity)
-                        : undefined,
-                    }
-                  : undefined
-              }
-            />
+              <TripMap
+                days={itinerary}
+                focusDays={[
+                  selectedDay,
+                ]}
+                resolvedPlaces={
+                  resolvedPlaces
+                }
+                resolvedRoutes={
+                  resolvedRoutes
+                }
+                selectedPlace={
+                  selectedPlace
+                }
+                showPlaceDetails={
+                  showPlaceDetails
+                }
+                onPlaceSelect={
+                  handlePlaceSelect
+                }
+                onClosePlaceDetails={() =>
+                  setShowPlaceDetails(
+                    false,
+                  )
+                }
+                navigation={
+                  selectedActivityIndex >=
+                  0
+                    ? {
+                        current:
+                          currentActivityIndex +
+                          1,
+                        total:
+                          mapActivities.length,
+
+                        onPrevious:
+                          previousActivity
+                            ? () =>
+                                handlePlaceSelect(
+                                  previousActivity,
+                                )
+                            : undefined,
+
+                        onNext:
+                          nextActivity
+                            ? () =>
+                                handlePlaceSelect(
+                                  nextActivity,
+                                )
+                            : undefined,
+                      }
+                    : undefined
+                }
+              />
             </div>
           )}
         </main>
@@ -569,11 +633,15 @@ function AppContent() {
           className="drawer-overlay"
         />
 
-      <Sidebar
-        days={itinerary}
-        selectedDayId={selectedDayId}
-        onDaySelect={handleDaySelect}
-      />
+        <Sidebar
+          days={itinerary}
+          selectedDayId={
+            selectedDayId
+          }
+          onDaySelect={
+            handleDaySelect
+          }
+        />
       </div>
     </div>
   )
