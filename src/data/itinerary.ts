@@ -238,15 +238,18 @@ export const itinerary: Day[] = [
         activities: [
             {
                 id: 'tokyo-to-kanazawa',
-                name: 'Tokyo → Kanazawa',
-                notes: 'Hokuriku Shinkansen to Kanazawa.',
+                name: 'Ueno → Kanazawa',
+                time: '10:02 AM',
+                notes: 'Hokuriku Shinkansen. Arrive Kanazawa at 12:30 PM.',
                 transportToNext: {
-                    mode: 'transit',
-                    name: 'Hokuriku Shinkansen',
-                    from: 'Tokyo',
-                    to: 'Kanazawa',
+                  mode: 'transit',
+                  name: 'Hokuriku Shinkansen',
+                  from: 'Ueno',
+                  to: 'Kanazawa',
+                  departureTime: '10:02 AM',
+                  arrivalTime: '12:30 PM',
                 },
-            },
+              },
             {
                 id: 'higashi-chaya',
                 name: 'Higashi Chaya District',

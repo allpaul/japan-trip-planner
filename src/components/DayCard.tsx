@@ -143,19 +143,6 @@ import {
                 {day.city}
               </span>
   
-              {summaryAccommodation && (
-                <>
-                  <span aria-hidden="true">
-                    •
-                  </span>
-  
-                  <span className="inline-flex items-center gap-1">
-                    <BedDouble className="h-4 w-4" />
-                    {summaryAccommodation.name}
-                  </span>
-                </>
-              )}
-  
               {summaryActivities.map(
                 (activity) => (
                   <Fragment
