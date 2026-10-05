@@ -4,7 +4,6 @@ import {
   } from 'react'
   
   import {
-    BedDouble,
     ChevronDown,
     ChevronRight,
     MapPin,
@@ -64,9 +63,6 @@ import {
       ).length - summaryActivities.length,
       0,
     )
-  
-    const summaryAccommodation =
-      day.accommodation
   
     const isCheckInDay =
       day.checkIn?.id ===
