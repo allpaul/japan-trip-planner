@@ -98,7 +98,7 @@ import {
     )
   
     return (
-      <div className="ml-[52px] my-3 min-w-0 rounded-xl border border-base-300 bg-base-100 p-3 sm:p-4">
+        <div className="ml-9 md:ml-[52px] my-3 min-w-0 rounded-xl border border-base-300 bg-base-100 p-3 sm:p-4">
         {/* Header */}
         <div className="flex items-start gap-2.5">
           <TrainFront className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
@@ -160,7 +160,7 @@ import {
               <span className="h-px min-w-0 flex-1 bg-base-content/25" />
             </div>
   
-            <span className="text-[12px] text-base-content/50">
+            <span className="text-[1px] text-base-content/50">
               {duration ? 'Direct' : ' '}
             </span>
           </div>
