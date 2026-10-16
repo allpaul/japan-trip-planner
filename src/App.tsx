@@ -8,6 +8,7 @@ import {
 } from '@vis.gl/react-google-maps'
 
 import {
+  ArrowUp,
   CalendarDays,
   Clock,
   List,
@@ -53,6 +54,11 @@ function AppContent() {
   ] = useState(itinerary[0].id)
 
   const [
+    showBackToTop,
+    setShowBackToTop,
+  ] = useState(false)
+
+  const [
     mobileView,
     setMobileView,
   ] =
@@ -75,71 +81,53 @@ function AppContent() {
    * the sticky mobile header.
    */
   useEffect(() => {
-    const isMobile =
-      window.matchMedia(
-        '(max-width: 767px)',
-      ).matches
+    const isMobile = window.matchMedia(
+      '(max-width: 767px)',
+    ).matches
 
-    if (
-      isMobile &&
-      mobileView !== 'itinerary'
-    ) {
-      return
-    }
+    const handleScroll = () => {
+      // Show back-to-top after scrolling 500px
+      setShowBackToTop(
+        isMobile &&
+        mobileView === 'itinerary' &&
+        window.scrollY > 500,
+      )
 
-    const updateActiveDay = () => {
-      /*
-       * MobileDayNav + Itinerary/Map
-       * controls are roughly 120px high.
-       * Check slightly beneath them.
-       */
+      // Only update selected day while viewing itinerary
+      if (isMobile && mobileView !== 'itinerary') {
+        return
+      }
+
       const triggerPoint = 140
-
-      let activeDayId =
-        itinerary[0].id
+      let activeDayId = itinerary[0].id
 
       for (const day of itinerary) {
-        const element =
-          document.getElementById(
-            day.id,
-          )
+        const element = document.getElementById(
+          day.id,
+        )
 
-        if (!element) {
-          continue
-        }
+        if (!element) continue
 
-        const rect =
-          element.getBoundingClientRect()
+        const rect = element.getBoundingClientRect()
 
-        if (
-          rect.top <= triggerPoint
-        ) {
+        if (rect.top <= triggerPoint) {
           activeDayId = day.id
         } else {
           break
         }
       }
 
-      setSelectedDayId(
-        activeDayId,
-      )
+      setSelectedDayId(activeDayId)
     }
 
-    updateActiveDay()
+    handleScroll()
 
-    window.addEventListener(
-      'scroll',
-      updateActiveDay,
-      {
-        passive: true,
-      },
-    )
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    })
 
     return () => {
-      window.removeEventListener(
-        'scroll',
-        updateActiveDay,
-      )
+      window.removeEventListener('scroll', handleScroll)
     }
   }, [mobileView])
 
@@ -626,6 +614,33 @@ function AppContent() {
             </div>
           )}
         </main>
+
+      {showBackToTop &&
+        mobileView === 'itinerary' && (
+          <button
+            type="button"
+            aria-label="Back to top"
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              })
+            }
+            className="
+              fixed bottom-5 right-5
+              z-50
+              flex h-12 w-12
+              cursor-pointer
+              items-center justify-center
+              rounded-full
+              bg-primary
+              text-primary-content
+              md:hidden
+            "
+          >
+            <ArrowUp className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
       {/* Desktop sidebar */}

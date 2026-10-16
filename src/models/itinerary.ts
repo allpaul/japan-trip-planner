@@ -5,11 +5,18 @@ export interface Location {
   
   export interface Transport {
     mode: 'walk' | 'transit' | 'drive'
-    departureTime?: string
-    arrivalTime?: string
     name?: string
     from?: string
     to?: string
+    departureTime?: string
+    arrivalTime?: string
+    showCard?: boolean
+    status?: 'booked' | 'to-book' | 'pass'
+    ticketMethod?: string
+    service?: string
+    seat?: string
+    bookingReference?: string
+    notes?: string
   }
   
   export interface Activity {

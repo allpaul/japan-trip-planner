@@ -17,6 +17,7 @@ import {
   
   import ActivityCard from './ActivityCard'
   import RouteLeg from './RouteLeg'
+  import TransportCard from './TransportCard'
   import AccommodationCard from './AccommodationCard'
   
   interface DayCardProps {
@@ -73,9 +74,7 @@ import {
       day.accommodation?.id
   
     return (
-      <section
-        className="mb-12 scroll-mt-6"
-      >
+      <section className="mb-12 scroll-mt-6">
         {/* Collapsible day heading */}
         <button
           type="button"
@@ -141,9 +140,7 @@ import {
   
               {summaryActivities.map(
                 (activity) => (
-                  <Fragment
-                    key={activity.id}
-                  >
+                  <Fragment key={activity.id}>
                     <span aria-hidden="true">
                       •
                     </span>
@@ -238,18 +235,19 @@ import {
               {day.activities.map(
                 (activity, index) => {
                   const nextActivity =
-                    day.activities[
-                      index + 1
-                    ]
+                    day.activities[index + 1]
+  
+                  const transport =
+                    activity.transportToNext
+  
+                const showTransportCard =
+                    transport?.mode === 'transit' &&
+                    transport.showCard === true
   
                   return (
-                    <Fragment
-                      key={activity.id}
-                    >
+                    <Fragment key={activity.id}>
                       <ActivityCard
-                        activity={
-                          activity
-                        }
+                        activity={activity}
                         index={index}
                         color={color}
                         onActivitySelect={
@@ -257,17 +255,19 @@ import {
                         }
                       />
   
-                      {nextActivity && (
-                        <RouteLeg
-                          from={activity}
-                          to={
-                            nextActivity
-                          }
-                          resolvedRoutes={
-                            resolvedRoutes
-                          }
+                    {nextActivity && (
+                    showTransportCard && transport ? (
+                        <TransportCard
+                        transport={transport}
                         />
-                      )}
+                    ) : (
+                        <RouteLeg
+                        from={activity}
+                        to={nextActivity}
+                        resolvedRoutes={resolvedRoutes}
+                        />
+                    )
+                    )}
                     </Fragment>
                   )
                 },
